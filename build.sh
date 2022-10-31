@@ -7,7 +7,7 @@
 
 echo "Delete current dist..."
 rm -vrf dist
-rm -vrf nosql_storage_wrapper/*.egg-info
+rm -vrf apiogram/*.egg-info
 
 python -m build
 

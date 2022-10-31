@@ -68,6 +68,7 @@ setup(
         "aiogram==2.22.2",
         "magic-config==0.1.10",
         "apiogram==0.1.0",
+        "pymongo==4.3.2",
     ],
     extras_require={
         "dev": [
