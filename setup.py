@@ -43,7 +43,7 @@ setup(
     long_description=get_description(),
     long_description_content_type="text/markdown",
     url="https://github.com/frontdevops/apiogram",
-    download_url="https://github.com/frontdevops/apiogram/archive/refs/tags/1.0.0.tar.gz",
+    # download_url="https://github.com/frontdevops/apiogram/archive/refs/tags/1.0.0.tar.gz",
     project_urls={
         "Documentation": "https://github.com/frontdevops/apiogram/blob/main/README.md",
         "Source": "https://github.com/frontdevops/apiogram",
