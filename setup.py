@@ -65,10 +65,8 @@ setup(
     include_package_data=False,
     python_requires=">=3.10.8",
     install_requires=[
-        "aiogram==2.22.2",
-        "magic-config==0.1.10",
-        "apiogram==0.1.0",
-        "pymongo==4.3.2",
+        "aiogram>=2.22.2",
+        "magic-config>=0.1.10",
     ],
     extras_require={
         "dev": [
