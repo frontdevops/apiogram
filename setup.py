@@ -43,7 +43,7 @@ setup(
     long_description=get_description(),
     long_description_content_type="text/markdown",
     url="https://github.com/frontdevops/apiogram",
-    download_url="https://github.com/frontdevops/apiogram/archive/refs/tags/0.1.3.tar.gz",
+    download_url="https://github.com/frontdevops/apiogram/archive/refs/tags/0.1.5.tar.gz",
     project_urls={
         "Documentation": "https://github.com/frontdevops/apiogram/blob/main/README.md",
         "Source": "https://github.com/frontdevops/apiogram",
@@ -67,6 +67,7 @@ setup(
     install_requires=[
         "aiogram>=2.22.2",
         "magic-config>=0.1.10",
+        "nosql-storage-wrapper>=0.1.0"
     ],
     extras_require={
         "dev": [
