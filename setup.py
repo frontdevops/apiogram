@@ -68,6 +68,7 @@ setup(
     install_requires=[
         "aiogram>=2.22.2",
         "magic-config>=0.1.10",
+        "geekjob-python-helpers>=1.0.0",
         "nosql-storage-wrapper>=0.1.0"
     ],
     extras_require={

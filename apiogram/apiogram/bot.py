@@ -1,11 +1,8 @@
 import os
-import sys
-import types
 import aiogram
 import asyncio
 import logging
 import pymongo
-from pprint import pprint
 from aiogram import Dispatcher
 from datetime import datetime
 from aiogram.types import ParseMode
@@ -17,6 +14,7 @@ from magic_config import Config
 from nosql_storage_wrapper.mongo import Storage
 from geekjob_python_helpers.fs import recursive_import
 from .direction import BotDirection
+from .helpers.middleware.msglogger import MessageLoggerMiddleware
 from contextlib import suppress
 from aiogram.utils.exceptions import (MessageCantBeDeleted,
                                       MessageToDeleteNotFound)
@@ -269,8 +267,11 @@ def start_polling(telegram_token: str = Config.telegram_token) -> None:
     # Get Bot instance and configurate it
     bot = Bot(telegram_token, storage_type="mongo")
 
+    # Register defualt core handler for logging all messages
+    bot.bot.middleware.setup(MessageLoggerMiddleware())
+
     if os.path.exists("helpers/middleware"):
-        import helpers.middleware as middlewares
+        import apiogram.apiogram.helpers.middleware as middlewares
         logging.debug(f"⚙️   Setup middleware from {middlewares.__name__}")
         for key in dir(middlewares):
             if key.startswith("_"):

@@ -4,7 +4,7 @@
 #twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 # check-manifest
 
-ver="0.1.6"
+ver="0.1.9"
 
 git pull origin main
 git add --all .
@@ -16,9 +16,9 @@ git push origin --tags
 
 echo "Delete current dist..."
 rm -vrf dist
-rm -vrf geekjob-python-helpers/*.egg-info
+rm -vrf apiogram/*.egg-info
 
 python -m build
+python -m twine upload --verbose dist/*
 
 #python -m twine upload --verbose --repository testpypi dist/*
-python -m twine upload --verbose dist/*
