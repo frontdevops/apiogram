@@ -66,7 +66,7 @@ class TelegramUser:
             setattr(self, k, v)
         return True
 
-    async def get(self) -> "User":
+    async def get(self) -> "TelegramUser":
         """
         Find user in storage
         @return: bool

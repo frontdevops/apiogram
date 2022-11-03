@@ -39,11 +39,12 @@ setup(
     version=project_meta["project"]["version"],
     author=project_meta["project"]["authors"][0]["name"],
     author_email=project_meta["project"]["authors"][0]["email"],
-    description="A simple library for easy work with key-value storages and document databases",
+    description=project_meta["project"]["description"],
     long_description=get_description(),
     long_description_content_type="text/markdown",
     url="https://github.com/frontdevops/apiogram",
-    download_url="https://github.com/frontdevops/apiogram/archive/refs/tags/0.1.5.tar.gz",
+    download_url=("https://github.com/frontdevops/apiogram/archive/refs/tags/"
+                  f'{project_meta["project"]["version"]}.tar.gz'),
     project_urls={
         "Documentation": "https://github.com/frontdevops/apiogram/blob/main/README.md",
         "Source": "https://github.com/frontdevops/apiogram",

@@ -1,9 +1,11 @@
 import os
+import sys
+import types
 import aiogram
 import asyncio
 import logging
 import pymongo
-from aiogram import types
+from pprint import pprint
 from aiogram import Dispatcher
 from datetime import datetime
 from aiogram.types import ParseMode
@@ -13,6 +15,7 @@ from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.contrib.fsm_storage.mongo import MongoStorage
 from magic_config import Config
 from nosql_storage_wrapper.mongo import Storage
+from geekjob_python_helpers.fs import recursive_import
 from .direction import BotDirection
 from contextlib import suppress
 from aiogram.utils.exceptions import (MessageCantBeDeleted,
@@ -40,7 +43,7 @@ def create_state_storage(storage_type: str | None = None) -> BaseStorage:
             return MemoryStorage()
 
 
-async def log_sending_message_id(message: types.Message, direction: int) -> None:
+async def log_sending_message_id(message: aiogram.types.Message, direction: int) -> None:
     """
     Log sending messages id
     """
@@ -134,7 +137,7 @@ class BotEngine:
         __send_message = self.bot.send_message
         self.recursion_counter = 0
 
-        async def wraped_send_message(**kwargs) -> types.Message | None:
+        async def wraped_send_message(**kwargs) -> aiogram.types.Message | None:
             err_str: str = ""
             success = False
             chat_id: int = kwargs["chat_id"]
@@ -198,7 +201,7 @@ class BotEngine:
     def message_handler(self, *args, **kwargs) -> callable:
         return self.dispatch.message_handler(*args, **kwargs)
 
-    async def answer(self, message: types.Message, text: str, **kwargs) -> bool:
+    async def answer(self, message: aiogram.types.Message, text: str, **kwargs) -> bool:
         """Send text messages to user"""
         if "reply_markup" in kwargs:
             kwargs["reply_markup"] = str(kwargs["reply_markup"])
@@ -230,7 +233,7 @@ class BotEngine:
         """Delete bot messages"""
         return await self.clear_previous_messages(chat_id, count=count, direction=BotDirection.Outgoing)
 
-    async def download_file(self, message: types.Message, file_id: str, file_unique_id: str) -> None:
+    async def download_file(self, message: aiogram.types.Message, file_id: str, file_unique_id: str) -> None:
         """Download file from telegram server"""
         dir_name = str(message.chat.id)
         os.makedirs("storage/cv/{}".format(dir_name), exist_ok=True)
@@ -246,6 +249,41 @@ class BotEngine:
     async def get_current_state(self) -> str:
         """Get current state"""
         return await self.dispatch.current_state().get_state()
+
+
+def start_polling(telegram_token: str = Config.telegram_token) -> None:
+    """
+    Start Telegram Bot API server
+    """
+    # Only for debug, delete my state
+    if Config.DEBUG and Config.DEBUG_USER_ID:
+        log.info(f"⚙️   Reset data for debug user: {Config.DEBUG_USER_ID}")
+
+        log.info("Clear chat_log...")
+        Storage("chat_log").delete_one({"chat": Config.DEBUG_USER_ID})
+
+        log.info("Clear aiogram_state...")
+        Storage("aiogram_state").delete_one({"chat": Config.DEBUG_USER_ID})
+
+    log.debug("⏯ Run main functionality")
+    # Get Bot instance and configurate it
+    bot = Bot(telegram_token, storage_type="mongo")
+
+    if os.path.exists("helpers/middleware"):
+        import helpers.middleware as middlewares
+        logging.debug(f"⚙️   Setup middleware from {middlewares.__name__}")
+        for key in dir(middlewares):
+            if key.startswith("_"):
+                continue
+            middleware = getattr(middlewares, key)
+            if callable(middleware) and isinstance(middleware, aiogram.dispatcher.middlewares.BaseMiddleware):
+                bot.bot.middleware.setup(middleware())
+
+    # Import all modules from modules folder
+    recursive_import("dialog_handlers")
+
+    # Start bot
+    aiogram.utils.executor.start_polling(bot, skip_updates=False)
 
 
 # Singleton instance
