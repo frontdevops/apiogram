@@ -1,10 +1,9 @@
-from aiogram import types
 import ast
 import json
+from aiogram import types
 from datetime import datetime
 from nosql_storage_wrapper.mongo import Storage
 from aiogram.dispatcher.middlewares import BaseMiddleware
-from apiogram import log_sending_message_id, BotDirection
 
 
 class MessageLoggerMiddleware(BaseMiddleware):
@@ -22,12 +21,19 @@ class MessageLoggerMiddleware(BaseMiddleware):
         except:
             data = ast.literal_eval(data)
 
-        await log_sending_message_id(message, BotDirection.Inbound)
+        await Storage("chat_msg_id").insert_one({
+            "chat_id": message.chat.id,
+            "msg_id": message.message_id,
+            # BotDirection.Inbound,
+            "dir": 1,
+            "datetime": datetime.now(),
+        })
 
         await Storage("chat_log").insert_one({
             "chat_id": message.chat.id,
             "datetime": datetime.now(),
-            "dir": BotDirection.Inbound,
+            # BotDirection.Inbound,
+            "dir": 1,
             "client": "aiogram",
             "data": data
         })

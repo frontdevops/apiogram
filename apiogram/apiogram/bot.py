@@ -268,17 +268,17 @@ def start_polling(telegram_token: str = Config.telegram_token) -> None:
     bot = Bot(telegram_token, storage_type="mongo")
 
     # Register defualt core handler for logging all messages
-    bot.bot.middleware.setup(MessageLoggerMiddleware())
+    bot.middleware.setup(MessageLoggerMiddleware())
 
     if os.path.exists("helpers/middleware"):
-        import apiogram.apiogram.helpers.middleware as middlewares
+        import apiogram.helpers.middleware as middlewares
         logging.debug(f"⚙️   Setup middleware from {middlewares.__name__}")
         for key in dir(middlewares):
             if key.startswith("_"):
                 continue
             middleware = getattr(middlewares, key)
             if callable(middleware) and isinstance(middleware, aiogram.dispatcher.middlewares.BaseMiddleware):
-                bot.bot.middleware.setup(middleware())
+                bot.middleware.setup(middleware())
 
     # Import all modules from modules folder
     recursive_import("dialog_handlers")
