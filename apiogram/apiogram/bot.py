@@ -207,6 +207,11 @@ class BotEngine:
 
     async def clear_previous_messages(self, chat_id: int, count: int = 1, direction: int = None) -> None:
         """Clear previous messages"""
+
+        if Config.DEBUG and Config.DEBUG_PRESERVE_MSG:
+            # preserve messages in debug mode
+            return
+
         filter = {"chat_id": chat_id}
         if direction is not None:
             filter["dir"] = direction
