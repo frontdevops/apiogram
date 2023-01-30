@@ -282,8 +282,10 @@ def start_polling(telegram_token: str = Config.telegram_token) -> None:
             if key.startswith("_"):
                 continue
             middleware = getattr(middlewares, key)
-            if callable(middleware) and isinstance(middleware, aiogram.dispatcher.middlewares.BaseMiddleware):
-                bot.middleware.setup(middleware())
+            # if callable(middleware) and isinstance(middleware, aiogram.dispatcher.middlewares.BaseMiddleware):
+            if isinstance(middleware, aiogram.dispatcher.middlewares.BaseMiddleware):
+                instance = middleware()
+                bot.middleware.setup(instance)
 
     # Import all modules from modules folder
     recursive_import("dialog_handlers")
