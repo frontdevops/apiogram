@@ -283,7 +283,8 @@ def start_polling(telegram_token: str = Config.telegram_token) -> None:
                 continue
             middleware = getattr(middlewares, key)
             # if callable(middleware) and isinstance(middleware, aiogram.dispatcher.middlewares.BaseMiddleware):
-            if isinstance(middleware, aiogram.dispatcher.middlewares.BaseMiddleware):
+            # if isinstance(middleware, aiogram.dispatcher.middlewares.BaseMiddleware):
+            if isinstance(middleware, type):
                 logging.debug(f"⚙️   Create instance of middleware {middleware.__name__}()")
                 instance = middleware()
                 logging.debug(f"⚙️   Register middleware instance bot.middleware.setup({middleware.__name__})")

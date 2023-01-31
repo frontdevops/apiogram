@@ -4,7 +4,7 @@
 #twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 # check-manifest
 
-ver="0.2.1"
+ver="0.2.2"
 
 git pull origin main
 git add --all .
@@ -21,4 +21,5 @@ rm -vrf apiogram/*.egg-info
 python -m build
 python -m twine upload --verbose dist/*
 
-#python -m twine upload --verbose --repository testpypi dist/*
+# 64
+# python -m twine upload --verbose --repository testpypi dist/*
