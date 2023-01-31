@@ -4,7 +4,7 @@
 #twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 # check-manifest
 
-ver="0.2.0"
+ver="0.2.1"
 
 git pull origin main
 git add --all .

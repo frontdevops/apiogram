@@ -276,7 +276,7 @@ def start_polling(telegram_token: str = Config.telegram_token) -> None:
     bot.middleware.setup(MessageLoggerMiddleware())
 
     if os.path.exists("helpers/middleware"):
-        import apiogram.helpers.middleware as middlewares
+        import helpers.middleware as middlewares
         logging.debug(f"⚙️   Setup middleware from {middlewares.__name__}")
         for key in dir(middlewares):
             if key.startswith("_"):
@@ -284,7 +284,9 @@ def start_polling(telegram_token: str = Config.telegram_token) -> None:
             middleware = getattr(middlewares, key)
             # if callable(middleware) and isinstance(middleware, aiogram.dispatcher.middlewares.BaseMiddleware):
             if isinstance(middleware, aiogram.dispatcher.middlewares.BaseMiddleware):
+                logging.debug(f"⚙️   Create instance of middleware {middleware.__name__}()")
                 instance = middleware()
+                logging.debug(f"⚙️   Register middleware instance bot.middleware.setup({middleware.__name__})")
                 bot.middleware.setup(instance)
 
     # Import all modules from modules folder
